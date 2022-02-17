@@ -1,20 +1,20 @@
 import React, {Component} from 'react'; 
-import './App.css';
+import './App_Kunde.css';
 
-import AppMenu from './components/AppMenu';
+import AppMenu from '../components/AppMenu';
 
-class App extends Component {
+class App_Kunde extends Component {
 
   render (){
     return (
       <div className="App">      
         <AppMenu/>
         <p>
-            App-Home
+            App-Kunde
           </p>
       </div>
     );
   }
 }
 
-export default App;
+export default App_Kunde;
