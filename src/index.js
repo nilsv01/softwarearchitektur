@@ -2,13 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.css';
+import AppMenu from "./components/AppMenu";
 import AppRouter from "./AppRouter";
+
 import reportWebVitals from './reportWebVitals';
 
 const rootElement = document.getElementById("root");
 
 ReactDOM.render(
-  <AppRouter/>,
+  <AppMenu/>,
    rootElement
 );
 

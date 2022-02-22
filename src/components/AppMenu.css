@@ -1,5 +1,12 @@
-
-  .App-Menu{  
+.Title {
+  text-align:left;
+  
+}
+.UserSwitch {
+  text-align: right;
+  
+} 
+ .App-Menu{  
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -36,18 +43,4 @@
     background-color: #4D849B;
     float: right;
   }
-
-  .UserSwitch.MuiSwitch-switchBase.Mui-checked{
-    color:"#21b6ae"
-  }
-
-  .UserSwitch.MuiSwitch-switchBase.Mui-checked :hover{
-    background-Color:"#21b6ae"
-  }
-
-  .UserSwitch.MuiSwitch-switchBase.Mui-checked{
-    background-Color: "#21b6ae"
-  }
-  .UserSwitch.MuiSwitch-switchBase.MuiSwitch-track{
-    background-Color: "#21b6ae"
-  }
+  

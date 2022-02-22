@@ -7,11 +7,8 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { alpha, styled } from '@mui/material/styles';
-import { AlignVerticalTopSharp } from '@mui/icons-material';
-
-
-class AppMenu extends GreenSwitch{
+import App from '../App';
+class AppMenu extends Component{
    state = {
       checked: true
     }; 
@@ -19,51 +16,43 @@ class AppMenu extends GreenSwitch{
    constructor(props){
       super(props);
       this.handleChange = this.handleChange.bind(this);
-      const GreenSwitch = styled(Switch)(({ theme }) => ({
-         '& .MuiSwitch-switchBase.Mui-checked': {
-           color: "#21b6ae",
-           '&:hover': {
-             backgroundColor: alpha("#21b6ae", theme.palette.action.hoverOpacity),
-           },
-         },
-         '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-           backgroundColor: "#21b6ae",
-         },
-       }));
    }
 
    handleChange = (event) => {
-      this.setState({checked: event.target.checked});
+      this.setState({customer: event.target.checked});
    };
 
-
    render(){
+      const customer = this.state.customer;
       return(
-         <AppBar position="static">
+      <Box>
+         <AppBar position="static"
+                 sx={{bgcolor:'warning.light'}}>
             <Container maxWidth="xl">
                <Toolbar disableGutters>
+                   <Typography className='Title' variant="h5" component="div" sx={{ flexGrow: 1 }}>
+                      Busfahrplan
+                  </Typography>
                   <Box>
                      <FormControlLabel
                          control={
                            <Switch
                             className='UserSwitch'
-                            checked={this.state.checked}
+                            checked={this.state.customer}
                             onChange={this.handleChange}
                             value="checked"
-                            color= 'primary'
+                            color= 'primary'S
                             variant="contained"
                            />
                          }       
                          labelPlacement="start"                          
-                         label={this.state.checked ? 'Kunde' : 'Mitarbeiter'}     
-                         href={this.state.checked ? '../' : '../Mitarbeiter'}/>
-                  </Box>
-                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                      Busfahrplan
-                  </Typography>
+                         label={this.state.customer ? 'Kunde' : 'Mitarbeiter'}/>
+                  </Box>                  
                </Toolbar>
             </Container>
          </AppBar>
+         <App customer={customer}/>
+      </Box>
       );
    }
 }
