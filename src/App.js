@@ -1,8 +1,7 @@
 import React, {Component} from 'react'; 
 import './App.css';
-import AppMenu from './components/AppMenu';
-import { Button } from '@mui/material';
-
+import { Box } from '@mui/material';
+import FahrplanTable from './components/FahrplanTable';
 class App extends Component {
 
   constructor(props){
@@ -17,11 +16,9 @@ class App extends Component {
   render (){
     const customer = this.props.customer
     return (
-      <div className="App">    
-        <p>
-            <button disabled={!this.props.customer} >test</button>
-          </p>
-      </div>
+      <Box className="App">
+        <FahrplanTable/>
+      </Box>
     );
   }
 }
