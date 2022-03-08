@@ -8,6 +8,9 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import App from '../App';
 import './AppMenu.css'
+import { orange } from '@mui/material/colors';
+import { createTheme } from '@mui/material/styles';
+import { ThemeProvider } from 'styled-components';
 class AppMenu extends Component {
    state = {
       customer: true
@@ -24,10 +27,12 @@ class AppMenu extends Component {
 
    render() {
       const customer = this.state.customer;
+       
       return (
-         <Box>
+        
+         <Box >
             <AppBar position="static"
-               sx={{ bgcolor: 'warning.light' }}>
+               sx={{ bgcolor: 'warning.main' }}>
                <Container maxWidth="xl">
                   <Toolbar disableGutters>
                      <Typography className='Title' variant="h5" component="div" sx={{ flexGrow: 1 }}>
@@ -50,6 +55,7 @@ class AppMenu extends Component {
                      </Box>
                   </Toolbar>
                </Container>
+              
             </AppBar>
             <App customer={customer} />
          </Box>

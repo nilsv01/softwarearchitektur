@@ -10,15 +10,16 @@ class App extends Component {
   }
 
   handleUser = (event) =>{
-    this.props.onCustomerChange(event.target.checked);
+    this.props.customer(event.target.checked);
   }
 
   render (){
     const customer = this.props.customer
     return (
       <Box className="App">
-        <FahrplanTable/>
+        <FahrplanTable customer={customer}/>        
       </Box>
+      
     );
   }
 }
