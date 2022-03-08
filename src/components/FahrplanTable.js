@@ -121,6 +121,17 @@ class FahrplanTable extends Component {
         console.log(searchValue);
     };
 
+    editRow = () => {
+
+    }
+
+    createRow = () => {
+        
+    }
+
+    deleteRow = () => {
+        
+    }
     render() {
         const columns = [
             { id: 'name', label: 'Name', minWidth: 170 },
@@ -235,17 +246,17 @@ class FahrplanTable extends Component {
                                 </Button>
                                 {customer
                                  ?<div></div>
-                                 :<Button>
+                                 :<Button onClick={this.editRow}>
                                    Bearbeiten</Button>
                                 }
                                 {customer
                                  ?<div></div>
-                                 :<Button>
+                                 :<Button onClick={this.createRow}>
                                    Anlegen</Button>
                                 }
                                 {customer
                                  ?<div></div>
-                                 :<Button>
+                                 :<Button onClick={this.deleteRow}>
                                    Löschen</Button>
                                 }
                         </Toolbar>
@@ -270,7 +281,7 @@ class FahrplanTable extends Component {
                                     .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
                                     .map((row) => {
                                         return (
-                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.code} selected={row.code==this.state.selectedRow}  >
+                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.id} selected={row.code==this.state.selectedRow} onClick={() => this.setSelectedRow(row.code)} >
                                                 {columns.map((column) => {
                                                     const value = row[column.id];
                                                     return (
@@ -297,7 +308,7 @@ class FahrplanTable extends Component {
                         onRowsPerPageChange={this.handleChangeRowsPerPage}
                     />
                 </Paper>
-                <p>{this.state.choosenRow}</p>
+                <p>{this.state.selectedRow}</p>
             </Box>
         );
     }
