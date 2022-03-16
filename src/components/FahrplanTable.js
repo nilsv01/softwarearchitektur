@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Container, TextField, Toolbar, Typography } from '@mui/material';
+import { Button, Toolbar, Typography } from '@mui/material';
 import { Box } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,9 +12,8 @@ import TablePagination from '@mui/material/TablePagination';
 import InputBase from '@mui/material/InputBase';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
-import axios from 'axios';
-import { AppBar } from '@material-ui/core';
-import './FahrplanTable.css'
+import EditFahrplan from './EditFahrplan';
+import CreateFahrplan from './CreateFahrplan';
 
 
 class FahrplanTable extends Component {
@@ -54,6 +53,8 @@ class FahrplanTable extends Component {
             this.createData('Russia', 'RU', 146793744, 17098246),
             this.createData('Nigeria', 'NG', 200962417, 923768),
             this.createData('Brazil', 'BR', 210147125, 8515767),],
+        selectedRow: null,
+        searched: "",
     };
 
     constructor(props) {
@@ -61,20 +62,17 @@ class FahrplanTable extends Component {
         this.createData = this.createData.bind(this);
         this.setPage = this.setPage.bind(this);
         this.setRows = this.setRows.bind(this);
-        this.setRowsPerPage = this.setRowsPerPage.bind(this);        
+        this.setRowsPerPage = this.setRowsPerPage.bind(this);
         this.setSelectedRow = this.setSelectedRow.bind(this);
         this.handleChangeSearched = this.handleChangeSearched.bind(this);
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
         this.handleUser = this.handleUser.bind(this);
         this.handleChoosenRow = this.handleChoosenRow.bind(this);
+        this.handleChangeOpenCreateFahrplan = this.handleChangeOpenCreateFahrplan.bind(this);
+        this.handleChangeOpenEditFahrplan = this.handleChangeOpenEditFahrplan.bind(this);
     };
 
-    createData(name, code, population, size) {
-        const density = population / size;
-        return { name, code, population, size, density };
-    };
-   
     setPage = (page) => {
         this.setState({ page: page });
     };
@@ -86,17 +84,18 @@ class FahrplanTable extends Component {
     setRows = (rows) => {
         this.setState({ rows: rows })
     }
-    
+
     setSelectedRow = (choosenrow) => {
-        const selectedRow = choosenrow.toString();
-        this.setState({selectedRow: selectedRow});
+        const selectedRow = choosenrow.code.toString();
+        this.setState({ selectedRow: selectedRow });
+        this.setState({ selectedWholeRow: choosenrow })
     }
 
     handleChangeSearched = (event) => {
         this.setState({ searched: event.target.value });
     }
-    
-    handleUser = (event) =>{
+
+    handleUser = (event) => {
         this.props.customer(event.target.checked);
     }
 
@@ -108,30 +107,47 @@ class FahrplanTable extends Component {
         this.setRowsPerPage(event.target.value);
         this.setPage(0);
     };
-    
+
     handleChoosenRow = (event) => {
-        this.setState({choosenRow: event.target.value})
-    }    
+        this.setState({ choosenRow: event.target.value })
+    };
+
+    handleChangeOpenEditFahrplan = () => {
+        if (this.state.selectedRow != null) {
+            const open = true;
+            const close = false;
+            this.setState({ openEditFahrplan: open });
+            this.setState({ openCreateFahrplan: close });
+        }
+    }
+
+    handleChangeOpenCreateFahrplan = () => {
+        const open = true;
+        const close = false;
+        this.setState({ openCreateFahrplan: open });
+        this.setState({ openEditFahrplan: close });
+    }
+
+    deleteRow = () => {
+
+    }
+
+    createData(name, code, population, size) {
+        const density = population / size;
+        return { name, code, population, size, density };
+    };
 
     requestSearch = () => {
         const searchValue = this.state.searched;
         const tempRows = this.state.originalRows;
+        const close = false;
         const filteredRows = tempRows.filter(tempRows => tempRows.name.toLowerCase().includes(searchValue.toLowerCase()));
         this.setRows(filteredRows);
         console.log(searchValue);
+        this.setState({ openCreateFahrplan: close });
+        this.setState({ openEditFahrplan: close });
     };
 
-    editRow = () => {
-
-    }
-
-    createRow = () => {
-        
-    }
-
-    deleteRow = () => {
-        
-    }
     render() {
         const columns = [
             { id: 'name', label: 'Name', minWidth: 170 },
@@ -199,24 +215,10 @@ class FahrplanTable extends Component {
                 },
             },
         }));
-        const rows = [
-            this.createData('India', 'IN', 1324171354, 3287263),
-            this.createData('China', 'CN', 1403500365, 9596961),
-            this.createData('Italy', 'IT', 60483973, 301340),
-            this.createData('United States', 'US', 327167434, 9833520),
-            this.createData('Canada', 'CA', 37602103, 9984670),
-            this.createData('Australia', 'AU', 25475400, 7692024),
-            this.createData('Germany', 'DE', 83019200, 357578),
-            this.createData('Ireland', 'IE', 4857000, 70273),
-            this.createData('Mexico', 'MX', 126577691, 1972550),
-            this.createData('Japan', 'JP', 126317000, 377973),
-            this.createData('France', 'FR', 67022000, 640679),
-            this.createData('United Kingdom', 'GB', 67545757, 242495),
-            this.createData('Russia', 'RU', 146793744, 17098246),
-            this.createData('Nigeria', 'NG', 200962417, 923768),
-            this.createData('Brazil', 'BR', 210147125, 8515767),
-        ];
-        const customer = this.props.customer
+
+        const customer = this.props.customer;
+        const EditSelectedRow = this.state.selectedWholeRow;
+
         return (
             <Box>
                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -228,7 +230,7 @@ class FahrplanTable extends Component {
                                 component="div"
                                 sx={{ display: { xs: 'none', sm: 'block' } }}
                             >
-                                Fahrpläne
+                                Fahrplanauskunft
                             </Typography>
                             <Search>
                                 <SearchIconWrapper>
@@ -239,76 +241,84 @@ class FahrplanTable extends Component {
                                     onChange={(e) => this.handleChangeSearched(e)}
                                     type={String}
                                     value={this.state.searched}
-                                />                                
+                                />
                             </Search>
                             <Button color="primary" className="App-ISBN-Input-Button" onClick={this.requestSearch}>
-                                   Abfragen
-                                </Button>
-                                {customer
-                                 ?<div></div>
-                                 :<Button onClick={this.editRow}>
-                                   Bearbeiten</Button>
-                                }
-                                {customer
-                                 ?<div></div>
-                                 :<Button onClick={this.createRow}>
-                                   Anlegen</Button>
-                                }
-                                {customer
-                                 ?<div></div>
-                                 :<Button onClick={this.deleteRow}>
-                                   Löschen</Button>
-                                }
+                                Abfragen
+                            </Button>
+                            {customer
+                                ? <div></div>
+                                : <Button onClick={this.handleChangeOpenEditFahrplan}>
+                                    Bearbeiten</Button>
+                            }
+                            {customer
+                                ? <div></div>
+                                : <Button onClick={this.handleChangeOpenCreateFahrplan}>
+                                    Anlegen</Button>
+                            }
+                            {customer
+                                ? <div></div>
+                                : <Button onClick={this.deleteRow}>
+                                    Löschen</Button>
+                            }
                         </Toolbar>
                     </Box>
-                    <TableContainer sx={{ maxHeight: 440 }}>
-                        <Table stickyHeader aria-label="sticky table">
-                            <TableHead>
-                                <TableRow >
-                                    {columns.map((column) => (
-                                        <TableCell
-                                            key={column.id}
-                                            align={column.align}
-                                            style={{ minWidth: column.minWidth }}
-                                        >
-                                            {column.label}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {this.state.rows
-                                    .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                                    .map((row) => {
-                                        return (
-                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.id} selected={row.code==this.state.selectedRow} onClick={() => this.setSelectedRow(row.code)} >
-                                                {columns.map((column) => {
-                                                    const value = row[column.id];
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            {column.format && typeof value === 'number'
-                                                                ? column.format(value)
-                                                                : value}
-                                                        </TableCell>
-                                                    );
-                                                })}
-                                            </TableRow>
-                                        );
-                                    })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[10, 25, 100]}
-                        component="div"
-                        count={this.state.rows.length}
-                        rowsPerPage={this.state.rowsPerPage}
-                        page={this.state.page}
-                        onPageChange={this.handleChangePage}
-                        onRowsPerPageChange={this.handleChangeRowsPerPage}
-                    />
+                    {(!this.state.openCreateFahrplan && !this.state.openEditFahrplan) | customer ?
+                        <Box>
+                            <TableContainer sx={{ maxHeight: 440 }}>
+                                <Table stickyHeader aria-label="sticky table">
+                                    <TableHead>
+                                        <TableRow >
+                                            {columns.map((column) => (
+                                                <TableCell
+                                                    key={column.id}
+                                                    align={column.align}
+                                                    style={{ minWidth: column.minWidth }}
+                                                >
+                                                    {column.label}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {this.state.rows
+                                            .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                                            .map((row) => {
+                                                return (
+                                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id} selected={row.code === this.state.selectedRow} onClick={() => this.setSelectedRow(row)} >
+                                                        {columns.map((column) => {
+                                                            const value = row[column.id];
+                                                            return (
+                                                                <TableCell key={column.id} align={column.align}>
+                                                                    {column.format && typeof value === 'number'
+                                                                        ? column.format(value)
+                                                                        : value}
+                                                                </TableCell>
+                                                            );
+                                                        })}
+                                                    </TableRow>
+                                                );
+                                            })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination
+                                rowsPerPageOptions={[10, 25, 100]}
+                                component="div"
+                                count={this.state.rows.length}
+                                rowsPerPage={this.state.rowsPerPage}
+                                page={this.state.page}
+                                onPageChange={this.handleChangePage}
+                                onRowsPerPageChange={this.handleChangeRowsPerPage}
+                            /></Box>
+                        : <div></div>}
+                    {this.state.openEditFahrplan && !customer ?
+                        <EditFahrplan EditSelectedRow={EditSelectedRow} />
+                        : <div></div>}
+                    {this.state.openCreateFahrplan && !customer ?
+                        <CreateFahrplan />
+                        : <div></div>}
                 </Paper>
-                <p>{this.state.selectedRow}</p>
             </Box>
         );
     }
