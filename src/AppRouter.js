@@ -1,6 +1,6 @@
 import React from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import App_Kunde from './view/App_Kunde';
+import App_Kunde from './App';
 import App_Mitarbeiter from './view/App_Mitarbeiter';
 
 function AppRouter() {    
